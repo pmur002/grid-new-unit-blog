@@ -1,0 +1,57 @@
+
++ Draft for R Blog entry on 'grid' new units
+
+  Develop here because only want to add the new blog into 
+  R-dev-web/Blog/ once know what day you are going to actually 
+  publish (because directories get created based on dates).
+
+  Once ready (and, e.g., TLP happy, and new-units committed to r-devel), 
+  move to R-dev-web/Blog/ to check build and publish.
+
+  + add 'bench' to the list of required packages in R-dev-web/Blog/README
+
++ ./Docker/
+
+  contains set up of docker image to run benchmarks on.
+
+  This is based on https://hub.docker.com/r/rocker/r-devel/dockerfile,
+  but, for example, compiles r-devel with '--enable-memory-profiling'
+  to provide a fair comparison 
+  (because memory profiler slows R down, c.f., 
+   https://stat.ethz.ch/R-manual/R-devel/library/utils/html/Rprofmem.html)
+  and removes 'COPY checkbashisms /usr/local/bin'
+
+  Build with ...
+
+  docker build -t pmur002/rocker-devel Docker
+
+  Run with ...
+
+  docker run --rm -ti pmur002/rocker-devel /bin/bash
+
+  + Install extra packages
+
+    install.packages(c("bench", "devoid", "ggplot2", "tidyr", "ggbeeswarm"))
+    install.packages(c("maps", "mapproj", "Hmisc", "hexbin"))
+
+  + To get files out of running container ...
+
+    # List containers
+    docker ps  -a
+
+    # Copy file from container to local dir
+    docker container cp ContainerID:/filename1 ./filename2
+
+  + Can also save image from container ...
+  
+    docker commit ContainerID newimagename
+
+    ... which gives images ...
+
+    grid-new-units-r-3.6.3
+    grid-new-units-r-devel
+
+    ... which have the packages installed in R 3.6.3 and R-devel, respectively.
+
+
+  
